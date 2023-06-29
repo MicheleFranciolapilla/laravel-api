@@ -1,0 +1,14 @@
+@import '~bootstrap/scss/bootstrap';
+@import './partials_and_variables/_variables';
+@import './partials_and_variables/_admin';
+@import './partials_and_variables/back_end';
+
+ul
+{
+    list-style: none;
+}
+
+a
+{
+    text-decoration: none;
+} 

@@ -1,0 +1,107 @@
+#back_end_page
+{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    #back_end_header
+    {
+        #header_logo, #header_user
+        {
+            flex-grow: 1;
+        }
+    }
+    
+    #back_end_main
+    {
+        height: $back_end_main_height;
+        display: flex;
+        column-gap: 1rem;
+        #back_end_menu
+        {
+            background-color: rgb(58, 57, 57);
+            border: 3px solid gray;
+            align-self: flex-start;
+            li
+            {
+                padding-left: 0;
+                .back_end_menu_item
+                {
+                    color: white;
+                    &:hover
+                    {
+                        color: greenyellow;
+                    }
+                }
+                &.line
+                {
+                    width: 100%;
+                    margin: 0.5rem 0;
+                    border-bottom: 2px solid gray;
+                }
+            } 
+        }
+        #back_end_view
+        {
+            flex-grow: 1;
+            border: 3px solid gray;
+            #back_end_view_top_row
+            {
+                column-gap: 1.5rem;
+                #title_form
+                {
+                    flex-basis: 40%;
+                }
+                #host_url_form
+                {
+                    flex-grow: 1;
+                    // flex-basis: 55%;
+                }
+            }
+            #back_end_view_bottom_row
+            {
+                column-gap: 2.5rem;
+                #technologies_check
+                {
+                    flex-basis: 18%;
+                    border: 1px solid white;
+                }
+                #category_select
+                {
+                    flex-grow: 1;
+                }
+                #image_area
+                {
+                    width: calc(55%);
+                    background-color: lightgray;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    #img_input_group
+                    {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                    }
+                    #img_preview_box
+                    {
+                        height: calc(100%);
+                        .thumb_form
+                        {
+                            height: 75%;
+                            border: 5px solid black;
+                            #img_thumb
+                            {
+                                height: 100%;
+                                aspect-ratio: 1;
+                                object-fit: cover;
+                                object-position: center;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
