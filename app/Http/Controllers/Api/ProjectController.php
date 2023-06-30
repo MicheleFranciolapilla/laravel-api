@@ -13,9 +13,15 @@ class ProjectController extends Controller
     function index()
     {
         $all_projects = Project::All();
-        return response()->json([
-                                    'success'   => true,
-                                    'projects'  => $all_projects
-                                ]);
+        if (count($all_projects) != 0)
+            return response()->json([
+                                        'success'   => true,
+                                        'projects'  => $all_projects
+                                    ]);
+        else
+            return response()->json([
+                                        'success'   => false,
+                                        'error'     => "Collezione vuota!"
+                                    ])->setStatusCode(404);
     }
 }
