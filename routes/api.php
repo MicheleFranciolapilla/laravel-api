@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\ProjectController as ProjectController;
+use App\Http\Controllers\Api\ApiProjectController as ApiProjectController;
+use App\Http\Controllers\Api\ApiCategoryController as ApiCategoryController;
+use App\Http\Controllers\Api\ApiTechnologyController as ApiTechnologyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +22,10 @@ use Illuminate\Support\Facades\Route;
 // });
 
 // localhost:8000/api/projects
-route::get('/projects', [ProjectController::class, 'index'])->name('api.projects.index');
+route::get('/projects', [ApiProjectController::class, 'index'])->name('api.projects.index');
+
+// localhost:8000/api/categories
+route::get('/categories', [ApiCategoryController::class, 'index'])->name('api.categories.index');
+
+// localhost:8000/api/technologies
+route::get('/technologies', [ApiTechnologyController::class, 'index'])->name('api.technologies.index');

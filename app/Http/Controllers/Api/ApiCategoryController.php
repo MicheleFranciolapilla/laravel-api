@@ -5,23 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Admin\Project as Project;
-use GrahamCampbell\ResultType\Success;
+use App\Models\Admin\Category as Category;
 
-class ProjectController extends Controller
+class ApiCategoryController extends Controller
 {
     function index()
     {
-        $all_projects = Project::All();
-        if (count($all_projects) != 0)
+        $all_categories = Category::All();
+        if (count($all_categories) != 0)
             return response()->json([
                                         'success'   => true,
-                                        'projects'  => $all_projects
+                                        'categories'  => $all_categories
                                     ]);
         else
             return response()->json([
                                         'success'   => false,
-                                        'error'     => "Collezione vuota!"
+                                        'error'     => "Non ci sono categorie disponibili!"
                                     ])->setStatusCode(404);
     }
 }
