@@ -17,10 +17,10 @@ class ApiCategoryController extends Controller
                                         'success'   => true,
                                         'categories'  => $all_categories
                                     ]);
-        else
-            return response()->json([
-                                        'success'   => false,
-                                        'error'     => "Non ci sono categorie disponibili!"
-                                    ])->setStatusCode(404);
+        // else
+        //     return response()->json([
+        //                                 'success'   => false,
+        //                                 'error'     => "Non ci sono categorie disponibili!"
+        //                             ])->setStatusCode(404);
     }
 }

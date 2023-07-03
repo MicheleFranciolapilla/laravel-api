@@ -17,10 +17,10 @@ class ApiTechnologyController extends Controller
                                         'success'   => true,
                                         'technologies'  => $all_technologies
                                     ]);
-        else
-            return response()->json([
-                                        'success'   => false,
-                                        'error'     => "Non ci sono tecnologie disponibili!"
-                                    ])->setStatusCode(404);
+        // else
+        //     return response()->json([
+        //                                 'success'   => false,
+        //                                 'error'     => "Non ci sono tecnologie disponibili!"
+        //                             ])->setStatusCode(404);
     }
 }

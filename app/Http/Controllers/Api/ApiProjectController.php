@@ -10,13 +10,16 @@ use GrahamCampbell\ResultType\Success;
 
 class ApiProjectController extends Controller
 {
-    function index()
+    function index(Request $request)
     {
-        $all_projects = Project::All();
-        if (count($all_projects) != 0)
+        if ($request->has('category_id'))
+            $projects = Project::with('category', 'technologies')->where('category_id', $request->category_id)->paginate(8);
+        else
+            $projects = Project::with('category', 'technologies')->paginate(8);
+        if (!empty($projects))
             return response()->json([
                                         'success'   => true,
-                                        'projects'  => $all_projects
+                                        'projects'  => $projects
                                     ]);
         else
             return response()->json([
