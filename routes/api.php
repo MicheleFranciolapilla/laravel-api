@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 // localhost:8000/api/projects
 route::get('/projects', [ApiProjectController::class, 'index'])->name('api.projects.index');
+route::get('/projects/{slug}', [ApiProjectController::class, 'show'])->name('api.projects.show');
 
 // localhost:8000/api/categories
 route::get('/categories', [ApiCategoryController::class, 'index'])->name('api.categories.index');

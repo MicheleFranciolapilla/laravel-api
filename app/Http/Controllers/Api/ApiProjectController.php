@@ -13,9 +13,9 @@ class ApiProjectController extends Controller
     function index(Request $request)
     {
         if ($request->has('category_id'))
-            $projects = Project::with('category', 'technologies')->where('category_id', $request->category_id)->paginate(8);
+            $projects = Project::with(['category', 'technologies'])->where('category_id', $request->category_id)->paginate(4);
         else
-            $projects = Project::with('category', 'technologies')->paginate(8);
+            $projects = Project::with(['category', 'technologies'])->paginate(4);
         if (!empty($projects))
             return response()->json([
                                         'success'   => true,
@@ -25,6 +25,21 @@ class ApiProjectController extends Controller
             return response()->json([
                                         'success'   => false,
                                         'error'     => "Collezione vuota!"
+                                    ])->setStatusCode(404);
+    }
+
+    function show($slug)
+    {
+        $project = Project::with(['category', 'technologies'])->where('slug', $slug)->first();
+        if ($project)
+            return response()->json([
+                                        'success'   => true,
+                                        'project'  => $project
+                                    ]);
+        else
+            return response()->json([
+                                        'success'   => false,
+                                        'error'     => "Il progetto non esiste"
                                     ])->setStatusCode(404);
     }
 }
