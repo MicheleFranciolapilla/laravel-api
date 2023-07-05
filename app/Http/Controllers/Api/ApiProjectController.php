@@ -22,7 +22,7 @@ class ApiProjectController extends Controller
             $requested_projects->where('category_id', $request->category_id);
         //Segue un secondo controllo sulla richiesta del front-end con conseguente, eventuale filtraggio.....
         // Se dal front-end è stato richiesto anche un filtraggio sulle tecnologie presenti nel progetto si applicano ulteriori restrizioni ai dati...
-        // NB. Tanto "category_id", quanto "tech_slugs" sono nomi delle chiavi di attributo aggiuntivo stabiliti dal front-end
+        // NB. Tanto "category_id", quanto "tech_slugs" e simili, sono nomi delle chiavi di attributo aggiuntivo stabiliti dal front-end
         if ($request->has('tech_slugs'))
         {
             // Si inizia definendo un array in cui si "esplode" la stringa del valore dell'attributo proveniente dal front-end.
@@ -36,9 +36,22 @@ class ApiProjectController extends Controller
                     $requested_projects->wherein('slug', $technology_slugs);
                 });
         }
+        // Segue un altro controllo sulla richiesta del front-end.
+        // QUESTA EVENTUALE RICHIESTA E' ALTERNATIVA ALLE PRECEDENTI
+        // AL MOMENTO NON VIENE ESEGUITA ALCUNA VALIDAZIONE SUL TESTO DA CERCARE
+        // Se nella richiesta è presente la chiave "search_str" significa che nel front-end è stato digitato del testo e lo si vuole cercare tra i progetti, nella sola colonna titolo o in entrambe le colonne titolo e descrizione, a seconda del valore di un'ulteriore chiave denominata "only_title"
         if ($request->has('search_str'))
         {
-            $requested_projects->whereRaw('LOWER(title) LIKE ?', ['%'.strtolower($request->search_str).'%']);
+            $lower_str = strtolower($request->search_str);
+            if (strtolower($request->only_title) == "no")
+                // Caso di ricerca in entrambe le colonne: titolo e descrizione
+                $requested_projects->where(function ($query) use ($lower_str) 
+                    {
+                        $query->whereRaw('LOWER(title) LIKE ?', ['%'.$lower_str.'%'])->orWhereRaw('LOWER(description) LIKE ?', ['%'.$lower_str.'%']);
+                    });
+            else
+                // Caso di ricerca nella sola colonna dei titoli
+                $requested_projects->whereRaw('LOWER(title) LIKE ?', ['%'.$lower_str.'%']);
         }
         // Al termine di tutti gli eventuali filtraggi si associano alla variabile $projects tutti i progetti rimasti in $requested_projects, impaginandoli
         $projects = $requested_projects->paginate(4);
