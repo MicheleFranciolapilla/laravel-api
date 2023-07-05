@@ -26,11 +26,11 @@ class Project_TechnologyTableSeeder extends Seeder
         // Si ciclano tutti i progetti in tabella
         foreach ($all_projects as $project)
         {
-            // Si determina randomicamente, per il progetto del momento, l'ammontare ($n) delle tecnologie utilizzate, da 0 (ovvero nessuna tecnologia) fino al numero massimo disponibile (ovvero tutte)
-            $n = mt_rand(0, $technologies);
+            // Si determina randomicamente, per il progetto del momento, l'ammontare ($n) delle tecnologie utilizzate, da 1 fino al numero massimo disponibile (OGNI PROGETTO DEVE AVERE ALMENO UNA TECNOLOGIA)
+            $n = mt_rand(1, $technologies);
             // L'array $technologies_array, azzerato ad ogni ciclo (per ogni progetto) verrà popolato con gli indici delle n tecnologie utilizzate
             $technologies_array = [];
-            // Nel seguente ciclo si individuano le n tecnologie da collegare al progetto (è previsto anche il caso in cui non vi sia alcuna tecnologia)
+            // Nel seguente ciclo si individuano le n tecnologie da collegare al progetto.
             $counter = 0;
             while ($counter < $n)
             {
@@ -45,8 +45,7 @@ class Project_TechnologyTableSeeder extends Seeder
                 $technologies_array[] = $technologies_ids_array[$technology_index];
                 $counter++;
             }
-            // Una volta individuati tutti gli "id" delle "n" tecnologie del progetto del momento, laddove n sia diverso da zero, li si carica nella tabella pivot
-            if (count($technologies_array) != 0)
+            // Una volta individuati tutti gli "id" delle "n" tecnologie del progetto del momento, li si carica nella tabella pivot
             $project->technologies()->attach($technologies_array);
         }
     }

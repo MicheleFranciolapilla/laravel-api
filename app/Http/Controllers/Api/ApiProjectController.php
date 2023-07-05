@@ -12,10 +12,33 @@ class ApiProjectController extends Controller
 {
     function index(Request $request)
     {
+        // Questo metodo riceve una richiesta di dati dal front-end; tutti i dati della richiesta sono elementi del parametro $request. Nella richiesta potrebbero essere presenti, oltre al numero di pagina, anche ulteriori informazioni indicanti eventuali filtraggi da effettuare sulla base delle tabelle relazionate con la tabella principale dei progetti.
+        // Si inizia acquisendo tutti i record della tabella Projects (model Project), incluse le relazioni con le tabelle Categories (metodo relazionale category) e Technologies (metodo relazionale technologies).
+        $requested_projects = Project::with(['category', 'technologies']);
+        // Segue un controllo sulla richiesta del front-end con conseguente, eventuale filtraggio....
+        // Se è richiesto un filtraggio sulla base della categoria specifca allora, alla collezione di progetti già acquisita, si applica la seguente restrizione:
+        // lasciare nella collezione solo quei progetti per i quali il valore nella colonna "category_id" coincide con il category_id richiesto dal front-end
         if ($request->has('category_id'))
-            $projects = Project::with(['category', 'technologies'])->where('category_id', $request->category_id)->paginate(4);
-        else
-            $projects = Project::with(['category', 'technologies'])->paginate(4);
+            $requested_projects->where('category_id', $request->category_id);
+        //Segue un secondo controllo sulla richiesta del front-end con conseguente, eventuale filtraggio.....
+        // Se dal front-end è stato richiesto anche un filtraggio sulle tecnologie presenti nel progetto si applicano ulteriori restrizioni ai dati...
+        // NB. Tanto "category_id", quanto "tech_slugs" sono nomi delle chiavi di attributo aggiuntivo stabiliti dal front-end
+        if ($request->has('tech_slugs'))
+        {
+            // Si inizia definendo un array in cui si "esplode" la stringa del valore dell'attributo proveniente dal front-end.
+            $technology_slugs = explode(",", $request->tech_slugs);
+            // Segue il filtraggio vero e proprio:
+            // il primo parametro del "wherehas" indica a quale metodo relazionale del model Project fare riferimento;
+            // il secondo parametro è una call back function il cui parametro è la collezione di progetti; lo "use" consente alla call back function di utilizzare l'array degli slugs nella sua logica. Nella logica della funzione si filtrano i progetti sulla base del fatto che gli slug delle tecnologie coincidano con quelle presenti nell'array, come richiesto dal front-end.
+            // N.B. IL FILTRAGGIO IN QUESTIONE E' DI TIPO "OR", NEL SENSO CHE LA LOGICA SOTTOSTANTE NON RICERCA LA CONTEMPORANEA PRESENZA DI TUTTE LE TECNOLOGIE RICHIESTE BENSI' LA PRESENZA DI ALMENO UNA TRA ESSE.
+            $requested_projects->whereHas('technologies', function($requested_projects) use ($technology_slugs)
+                {
+                    $requested_projects->wherein('slug', $technology_slugs);
+                });
+        }
+        // Al termine di tutti gli eventuali filtraggi si associano alla variabile $projects tutti i progetti rimasti in $requested_projects, impaginandoli
+        $projects = $requested_projects->paginate(4);
+
         if (!empty($projects))
             return response()->json([
                                         'success'   => true,
