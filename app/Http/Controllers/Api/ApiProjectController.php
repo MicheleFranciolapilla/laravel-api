@@ -36,6 +36,10 @@ class ApiProjectController extends Controller
                     $requested_projects->wherein('slug', $technology_slugs);
                 });
         }
+        if ($request->has('search_str'))
+        {
+            $requested_projects->whereRaw('LOWER(title) LIKE ?', ['%'.strtolower($request->search_str).'%']);
+        }
         // Al termine di tutti gli eventuali filtraggi si associano alla variabile $projects tutti i progetti rimasti in $requested_projects, impaginandoli
         $projects = $requested_projects->paginate(4);
 
