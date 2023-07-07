@@ -10,6 +10,8 @@ use GrahamCampbell\ResultType\Success;
 
 class ApiProjectController extends Controller
 {
+    private     $page_size   =   6; 
+
     function index(Request $request)
     {
         // Questo metodo riceve una richiesta di dati dal front-end; tutti i dati della richiesta sono elementi del parametro $request. Nella richiesta potrebbero essere presenti, oltre al numero di pagina, anche ulteriori informazioni indicanti eventuali filtraggi da effettuare sulla base delle tabelle relazionate con la tabella principale dei progetti.
@@ -54,9 +56,8 @@ class ApiProjectController extends Controller
                 $requested_projects->whereRaw('LOWER(title) LIKE ?', ['%'.$lower_str.'%']);
         }
         // Al termine di tutti gli eventuali filtraggi si associano alla variabile $projects tutti i progetti rimasti in $requested_projects, impaginandoli
-        $projects = $requested_projects->paginate(4);
-
-        if (!empty($projects))
+        $projects = $requested_projects->paginate($this->page_size);
+        if ($projects->isNotEmpty())
             return response()->json([
                                         'success'   => true,
                                         'projects'  => $projects
@@ -64,7 +65,7 @@ class ApiProjectController extends Controller
         else
             return response()->json([
                                         'success'   => false,
-                                        'error'     => "Collezione vuota!"
+                                        'error_msg' => "Progetto/i non trovato/i"
                                     ])->setStatusCode(404);
     }
 
@@ -74,12 +75,20 @@ class ApiProjectController extends Controller
         if ($project)
             return response()->json([
                                         'success'   => true,
-                                        'project'  => $project
+                                        'project'   => $project
                                     ]);
         else
             return response()->json([
                                         'success'   => false,
                                         'error'     => "Il progetto non esiste"
                                     ])->setStatusCode(404);
+    }
+
+    function get_page_size()
+    {
+        return response()->json([
+                                    'success'   =>  true,
+                                    'page_size' =>  $this->page_size
+                                ]);
     }
 }

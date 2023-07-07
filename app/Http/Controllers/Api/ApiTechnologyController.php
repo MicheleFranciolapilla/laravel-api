@@ -12,15 +12,15 @@ class ApiTechnologyController extends Controller
     function index()
     {
         $all_technologies = Technology::All();
-        if (count($all_technologies) != 0)
+        if ($all_technologies->isNotEmpty())
             return response()->json([
                                         'success'   => true,
                                         'technologies'  => $all_technologies
                                     ]);
-        // else
-        //     return response()->json([
-        //                                 'success'   => false,
-        //                                 'error'     => "Non ci sono tecnologie disponibili!"
-        //                             ])->setStatusCode(404);
+        else
+            return response()->json([
+                                        'success'   => false,
+                                        'error'     => "Non ci sono tecnologie disponibili!"
+                                    ])->setStatusCode(404);
     }
 }

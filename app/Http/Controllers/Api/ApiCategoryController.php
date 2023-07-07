@@ -12,15 +12,15 @@ class ApiCategoryController extends Controller
     function index()
     {
         $all_categories = Category::All();
-        if (count($all_categories) != 0)
+        if ($all_categories->isNotEmpty())
             return response()->json([
                                         'success'   => true,
                                         'categories'  => $all_categories
                                     ]);
-        // else
-        //     return response()->json([
-        //                                 'success'   => false,
-        //                                 'error'     => "Non ci sono categorie disponibili!"
-        //                             ])->setStatusCode(404);
+        else
+            return response()->json([
+                                        'success'   => false,
+                                        'error'     => "Non ci sono categorie disponibili!"
+                                    ])->setStatusCode(404);
     }
 }
