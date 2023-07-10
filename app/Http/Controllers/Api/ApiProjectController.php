@@ -88,8 +88,9 @@ class ApiProjectController extends Controller
     function get_page_size()
     {
         return response()->json([
-                                    'success'   =>  true,
-                                    'page_size' =>  $this->page_size
+                                    'success'       =>  true,
+                                    'page_size'     =>  $this->page_size,
+                                    'max_page_size' =>  $this->max_page_size,
                                 ]);
     }
 
