@@ -10,7 +10,8 @@ use GrahamCampbell\ResultType\Success;
 
 class ApiProjectController extends Controller
 {
-    private     $page_size   =   6; 
+    private     $max_page_size  = 10; 
+    private     $page_size      = 6; 
 
     function index(Request $request)
     {
@@ -90,5 +91,16 @@ class ApiProjectController extends Controller
                                     'success'   =>  true,
                                     'page_size' =>  $this->page_size
                                 ]);
+    }
+
+    function set_page_size($new_page_size)
+    {
+        $success =  false;
+        if (is_int($new_page_size) && ($new_page_size <= $this->max_page_size))
+        {
+            $success = true;
+            $this->page_size = $new_page_size;
+        }
+        return response()->json([ 'success' => $success ]);
     }
 }
